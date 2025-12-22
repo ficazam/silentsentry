@@ -46,6 +46,11 @@ export class FirestoreClient {
       return JSON.parse(raw);
     }
 
+    if (jsonInline && jsonInline.trim().startsWith('/')) {
+      const raw = fs.readFileSync(jsonInline.trim(), 'utf8');
+      return JSON.parse(raw);
+    }
+
     if (jsonInline && jsonInline.trim()) {
       return JSON.parse(jsonInline);
     }
