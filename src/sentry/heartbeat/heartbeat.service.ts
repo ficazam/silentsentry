@@ -6,6 +6,7 @@ import { request } from 'undici';
 export class HeartbeatService {
   async probe(target: MonitoredTarget): Promise<ProbeOutcome> {
     const url = target.url;
+
     if (!url)
       return {
         ok: false,
@@ -16,8 +17,17 @@ export class HeartbeatService {
 
     const method = target.method ?? 'GET';
     const timeout = target.timeoutMs ?? 5000;
-    const headers = target.headers ?? {};
     const start = Date.now();
+
+    const headers = {
+      'user-agent': 'SilentSentry/1.0 (+https://www.felipeicaza.dev)',
+      accept:
+        'text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8',
+      'accept-language': 'en-US,en;q=0.9',
+      'cache-control': 'no-cache',
+      pragma: 'no-cache',
+      ...(target.headers ?? {}),
+    };
 
     try {
       const controller = new AbortController();

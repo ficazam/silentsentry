@@ -14,6 +14,7 @@ export const evaluateOutcome = (
 
   let status: TargetStatus = 'UP';
   if (!outcome.ok) status = 'DOWN';
+  if (outcome.statusCode === null) status = 'STALE';
   if (outcome.statusCode != null && outcome.statusCode !== expected)
     status = 'DOWN';
 
@@ -26,7 +27,11 @@ export const evaluateOutcome = (
     if (outcome.latencyMs > target.latencyDegradedMs) status = 'DEGRADED';
   }
 
-  if (outcome.error?.toLowerCase().includes('timeout')) status = 'DOWN';
+  if (
+    outcome.error?.toLowerCase().includes('timeout') &&
+    outcome.statusCode !== null
+  )
+    status = 'DOWN';
 
   return {
     targetId: target.id,
