@@ -1,0 +1,1 @@
+export type TargetStatus = "UP" | "DOWN" | "DEGRADED" | "STALE";
