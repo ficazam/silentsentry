@@ -57,17 +57,22 @@ export class SentryScheduler {
     timeZone: process.env.SENTRY_TIMEZONE ?? 'America/Panama',
   })
   async dailySummary(): Promise<void> {
+    const tz = process.env.SENTRY_TIMEZONE ?? 'America/Panama';
+    const cutoff = startOfYesterdayInTz(tz);
+
     try {
       await this.sentry.sendDailySummary();
-      const tz = process.env.SENTRY_TIMEZONE ?? 'America/Panama';
-      const cutoff = startOfYesterdayInTz(tz);
+    } catch (e: any) {
+      this.logger.error(`Daily summary send failed: ${e?.message ?? e}`);
+    }
 
+    try {
       const deleted = await this.storage.deleteCheckResultsBefore(cutoff);
       this.logger.log(
         `Deleted ${deleted} checkResults before ${cutoff.toISOString()}`,
       );
     } catch (e: any) {
-      this.logger.error(`Daily summary failed: ${e?.message ?? e}`);
+      this.logger.error(`Cleanup failed: ${e?.message ?? e}`);
     }
   }
 }
