@@ -82,9 +82,10 @@ export class SentryService {
       const uptimePct = checks > 0 ? (up / checks) * 100 : 0;
       const avgLatency =
         checks > 0
-          ? results.reduce((sum, r) => sum + (r.latencyMs ?? 0) / checks, 0)
+          ? results.reduce((sum, r) => sum + (r.latencyMs ?? 0), 0) / checks
           : 0;
-      const last = results[results.length - 1];
+
+      const last = results.at(-1);
 
       items.push({
         target,
@@ -93,8 +94,8 @@ export class SentryService {
         downs,
         degraded,
         avgLatency,
-        lastStatus: last.status ?? 'UNKNOWN',
-        lastError: last.errorMessage ?? null,
+        lastStatus: checks === 0 ? 'NO_DATA' : (last?.status ?? 'UNKNOWN'),
+        lastError: last?.errorMessage ?? null,
       });
     }
 
