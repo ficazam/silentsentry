@@ -166,8 +166,8 @@ export class FirestoreStorage {
     while (true) {
       const snap = await db
         .collection('checkResults')
-        .where('createdAt', '<', cutoff)
-        .orderBy('createdAt', 'asc')
+        .where('timestamp', '<', cutoff)
+        .orderBy('timestamp', 'asc')
         .limit(450)
         .get();
 
