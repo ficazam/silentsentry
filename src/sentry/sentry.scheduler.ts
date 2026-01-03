@@ -53,7 +53,7 @@ export class SentryScheduler {
     }
   }
 
-  @Cron('0 0 * * * *', {
+  @Cron('0 0 9 * * *', {
     timeZone: process.env.SENTRY_TIMEZONE ?? 'America/Panama',
   })
   async dailySummary(): Promise<void> {
