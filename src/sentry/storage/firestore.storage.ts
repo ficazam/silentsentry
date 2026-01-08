@@ -82,8 +82,8 @@ export class FirestoreStorage {
       .db()
       .collection('checkResults')
       .where('targetId', '==', targetId)
-      .where('ts', '>=', since)
-      .orderBy('ts', 'asc')
+      .where('timestamp', '>=', since)
+      .orderBy('timestamp', 'asc')
       .get();
 
     return snap.docs.map((d) => {
